@@ -1,0 +1,70 @@
+.. _validating:
+
+Validating the emulator
+=======================
+
+Introduction to validation
+--------------------------
+
+The machinery of Gaussian-process regression assumes that the regression and
+covariance functions, :math:`r` and :math:`k`, are known. In practice, they
+never are. We must choose approximations to these functions, as discussed in
+:ref:`gpe`. We would like to know that these have have been well chosen,
+i.e. we would like to assess the performance of the emulator given our choice
+of regression and covariance functions. We may do this using leave-one-out
+cross-validation (LOOCV) (Wasserman, 2007). We note that the estimator
+:eq:`gpe_mean` is distributed normally with variance :math:`\sigma^2`
+:eq:`gpe_mse`, and expect that for a well-specified covariance this
+distribution will be observed in our estimator. Ideally, we would evaluate our
+dynamical model at a large number of test points, and compare the distribution
+of the residuals of our predictions with that expected. This, of course,
+imposes an impractical computational burden. Instead, we omit the :math:`i`-th
+pair, :math:`(\boldsymbol{x}_i, y(\boldsymbol{x}_i))`, from our training data
+to give the reduced data, :math:`(\boldsymbol{x}_j, y(\boldsymbol{x}_j))_{j
+\neq i}`. Using these data we then compute an estimate for
+:math:`y(\boldsymbol{x}_i)`, finding that :math:`Y(\boldsymbol{x}_i) |
+(\boldsymbol{Y}_{-i} = \boldsymbol{y}_{-i}) \sim
+N(\hat{y}_{-i}(\boldsymbol{x}_i), \hat{\sigma}_{-i}^2(\boldsymbol{x}_i))`. We
+expect that the *standardized predicted error* (Wasserman, 2007),
+
+.. math::
+
+    e_{-i}(\boldsymbol{x}_i) := \frac{y(\boldsymbol{x}_i) -
+    \hat{r}_{-i}(\boldsymbol{x}_i)}{\hat{\sigma}_{-i}(\boldsymbol{x}_i)},
+    \label{eq:predicted_error}
+
+is normally distributed with zero mean and unit variance.
+
+One way to compare two distributions is by means of a *quantile-quantile
+plot*, in which we plot the quantiles of one distribution against the
+quantiles of the other. If the two distributions are the same, then the points
+will lie on the diagonal. If either distribution is empirical we may
+substitute its ordered observed values for its quantiles. To check that the
+standardized residuals are distributed as required, we therefore plot the
+:math:`n` ordered residuals of our fit against the equivalent quantiles of the
+normal distribution. If the covariance function has been well-specified we
+expect them to be evenly scattered along the diagonal.
+
+We also require expect the residuals to be small. This can be quantified by
+the *mean squared predicted error* (also *leave-one-out cross-validation
+score*),
+
+.. math::
+   
+   R = \frac{1}{n} \sum_{i = 1}^{n} (y(\boldsymbol{x}_i) -
+   \hat{r}_{-i}(\boldsymbol{x}_i))^2,
+
+which tends to zero in the infinite-training data limit.
+
+Furthermore, we expect that the residuals exhibit no trend. We may plot the
+standardized predicted errors against the associated predicted values for
+:math:`y`. Finally, we expect that there are no significant outliers (greater
+than three sigma, or :math:`e_{-i} > 3`, say), which would indicate that the
+estimator is underperforming is certain regions of parameter space.
+
+      
+References
+----------
+
+Wasserman, L. 2007. *All of non-parametric statistics: a concise course in
+nonparametric statistical inference*. New York: Springer.

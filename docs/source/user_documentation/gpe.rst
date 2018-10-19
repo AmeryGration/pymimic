@@ -1,0 +1,247 @@
+.. _gpe:
+
+Gaussian-process emulation
+==========================
+
+
+Introduction to Gaussian-process emulation
+------------------------------------------
+
+A random process, :math:`(Y(\boldsymbol{x}))_{\boldsymbol{x} \in
+\boldsymbol{X}}`, is an indexed set of random variables. We call the index set
+:math:`\boldsymbol{X}` the *parameter space*, and an index
+:math:`\boldsymbol{x}` a *parameter* (or *parameter vector* if
+:math:`\boldsymbol{X}` is multidimensional). We will assume that
+:math:`\boldsymbol{X}` is a compact subset of :math:`\mathbf{R}^D`, and call
+:math:`D` the *dimension* of the random process.
+
+A random process is *Gaussian* if every finite subset of the process has a
+multivariate normal distribution. A process is completely specified by the
+joint PDF for every finite subset of the process. Since the joint PDF of a
+multivariate normal distribution is completely specified by its mean and
+covariance, a Gaussian process is completely specified by its mean and
+covariance. The mean is the function :math:`m: \boldsymbol{X} \longrightarrow
+\mathbf{R}` such that :math:`m(\boldsymbol{x}) =
+\operatorname{E}(Y(\boldsymbol{x}))`. The covariance is the function
+:math:`\sigma^2: \boldsymbol{X}^2 \longrightarrow \mathbf{R}` such that
+:math:`\sigma^2(\boldsymbol{x}, \boldsymbol{x}') =
+\operatorname{cov}(Y(\boldsymbol{x}), Y(\boldsymbol{x}'))`. If a process,
+:math:`Y`, is Gaussian we write
+
+.. math::
+
+    Y \sim \mathrm{GP}(m, \sigma^2).
+
+Gaussian-process emulation is a form of curve fitting (or *regression* as it
+is called in the statistical literature). Recall that in curve-fitting we have
+a dependent random variable, :math:`Y`, and an independent random variable (or
+indeed, random vector), :math:`\boldsymbol{X}`, and wish to find the
+relationship between them. Specifically, we wish to know the distribution of
+the conditional random variable :math:`Y(\boldsymbol{x}) := Y |
+(\boldsymbol{X} = \boldsymbol{x})`. We may always write the relationship in
+the form
+
+.. math::
+
+   Y(\boldsymbol{x}) = r(\boldsymbol{x}) + E(\boldsymbol{x}),
+
+where :math:`r` is the regression function such that :math:`r(\boldsymbol{x})
+= \operatorname{E}(Y(\boldsymbol{x}))` and :math:`E(\boldsymbol{x})` is a
+random variable with zero mean (the *noise* or *error*). Given training data
+:math:`\{(\mathbf{x}_i, y(\mathbf{x}_i)) \,|\, \mathbf{x}_i \in \mathbf{X}
+\text{ and } i = 1, 2, ... , n\}` we seek an estimator for :math:`r`, which we
+denote :math:`\hat{r}`. We call the set :math:`\{\boldsymbol{x}_i \,|\,
+\mathbf{x}_i \in \mathbf{X} \text{ and } i = 1, 2, ... , n\}` the *design* and
+we call the set :math:`\{y(\boldsymbol{x}_i) \,|\, \mathbf{x}_i \in \mathbf{X}
+\text{ and } i = 1, 2, ... , n\}` the *sample of the dependent variable* (or,
+simply, the *sample*).
+
+Note that the set :math:`Y = (Y(\boldsymbol{x}))_{\boldsymbol{x} \in
+\boldsymbol{X}}` is a random process, as defined above. In GPE we assume that
+:math:`Y` is a Gaussian random process with mean equal to the regression
+function, i.e. we assume that :math:`m = r`.
+
+Then :math:`(E(\boldsymbol{x}))_{\boldsymbol{x} \in \boldsymbol{X}}` is a
+Gaussian random process with zero mean. We will assume that the covariance of
+the Gaussian random process is the sum of two terms, i.e. we will assume that
+
+.. math::
+   
+    \sigma^{2}(\boldsymbol{x}, \boldsymbol{x}') = k(\boldsymbol{x},
+    \boldsymbol{x}') +
+    \sigma^{2}_{\epsilon}(\boldsymbol{x})\delta(\boldsymbol{x},
+    \boldsymbol{x}'),
+
+where :math:`\delta` is the Kronecker delta function. The first term
+represents the signal and the second term represents the noise. Note that the
+noise is not in general constant, but is a function of
+:math:`\boldsymbol{x}`. In statistical parlance, we would say that the errors
+are *heteroscedastic* rather than *homoscedastic*.
+
+Suppose we wish to predict the value of the dependent variable
+:math:`Y(\boldsymbol{x})` for some :math:`\boldsymbol{x} \in
+\boldsymbol{X}`. By hypothesis, the distribution of this random variable is
+univariate normal, i.e.
+
+.. math::
+
+    Y(\boldsymbol{x}) \sim N(r(\boldsymbol{x}), \sigma^{2}(\boldsymbol{x},
+    \boldsymbol{x})).
+
+Furthermore, we may define the random vector, :math:`\boldsymbol{Y}`, such
+that :math:`[\boldsymbol{Y}]_i = Y(\boldsymbol{x}_i)`. The sample is a
+realization of this random vector, and we may define the *sample vector*,
+:math:`\boldsymbol{y}`, such that :math:`[\boldsymbol{y}]_i =
+y(\boldsymbol{x}_i)`. Then, again by hypothesis, the joint distribution of
+:math:`\boldsymbol{Y}` is multivariate normal, i.e.
+
+.. math::
+   :label: sample_distribution
+	   
+   \boldsymbol{Y} \sim N(\boldsymbol{r}, \boldsymbol{K}),
+
+
+where :math:`[\boldsymbol{r}]_i = r(\boldsymbol{x}_i)`, and
+:math:`[\boldsymbol{K}]_{ij} = \sigma^2(\boldsymbol{x}_{i},
+\boldsymbol{x}_{j})`.
+
+Although we cannot find :math:`r` and :math:`\sigma^2` exactly, we can find
+estimators (i.e. approximations) for them, which we denote :math:`\hat{r}`,
+and :math:`\hat{\sigma}^2`. We take these to be the mean and variance of the
+conditional random variable
+
+.. math::
+   
+    Y(\boldsymbol{x}) \,|\, (\boldsymbol{Y} = \boldsymbol{y}) \sim
+    N(\hat{r}(\boldsymbol{x}), \hat{\sigma}^2(\boldsymbol{x},
+    \boldsymbol{x})).  \label{eq:gpe_conditional}
+
+
+It is a standard result (O'Hagan and Kingman, 1978) that
+
+.. math::
+   :label: gpe_mean
+	   
+   \hat{r}(\boldsymbol{x})
+   = r(\boldsymbol{x}) +
+   \boldsymbol{k}^\mathrm{t}(\boldsymbol{x})\boldsymbol{K}^{- 1}
+   (\boldsymbol{y} - \boldsymbol{r}),
+
+and
+
+.. math::
+   :label: gpe_var
+	   
+   \hat{\sigma}^2(\boldsymbol{x}, \boldsymbol{x})
+   = k(\boldsymbol{x}, \boldsymbol{x}) -
+   \boldsymbol{k}^\mathrm{t}(\boldsymbol{x})\boldsymbol{K}^{- 1}
+   \boldsymbol{k}(\boldsymbol{x})
+   \label{eq:gpe_var}
+
+where :math:`[\boldsymbol{k}(\boldsymbol{x})]_i = \sigma^2(\boldsymbol{x}_i,
+\boldsymbol{x})`. These two equations are the principal results of GPE. The
+estimator, :math:`\hat{r}`, is the sum of two terms. The first is the
+regression function, and the second a smoothing of the residuals,
+:math:`(\boldsymbol{y} - \boldsymbol{r})`. In fact this smoothing is a
+weighted sum of the residuals, where the weights are the elements of the
+vector :math:`\boldsymbol{k}^\mathrm{t}(\boldsymbol{x})\boldsymbol{K}^{- 1}`.
+
+To evaluate equations :eq:`gpe_mean` and :eq:`gpe_var`, we must assume a mean
+function, :math:`r`, a covariance function, :math:`k`, and an error,
+:math:`\sigma_\epsilon^2`. In the case of a deterministic computer experiment,
+there is no error in the output, and hence
+:math:`\sigma_\epsilon^2(\boldsymbol{x}) = 0` for all
+:math:`\boldsymbol{x}`. However, it is not uncommon for the output of a
+computer experiment to be pseudo-random. This is the case, for example, if the
+experiment uses Monte Carlo integration. In such cases there is, in fact,
+error in the output, and hence :math:`\sigma_\epsilon^2` is the variance of
+its distribution. We choose the mean and covariance functions from a model,
+i.e.  we assume that :math:`r \in (r_{\boldsymbol{\mu}})_{\boldsymbol{\mu} \in
+\boldsymbol{M}}` and :math:`k \in (k_{\boldsymbol{\nu}})_{\boldsymbol{\nu} \in
+\boldsymbol{N}}`, where we call :math:`\boldsymbol{M}` and
+:math:`\boldsymbol{N}` sets of *hyperparameters*.
+      
+The function :math:`r_{\boldsymbol{\mu}}` might be a finite linear combination
+of basis functions, :math:`(\xi_i)_{i = 1}^n`, and :math:`\boldsymbol{\mu}`
+the set of coefficients:
+
+.. math::
+
+   r(\boldsymbol{x}; \boldsymbol{\mu}) 
+   &= \sum_{i = 1}^{n} \mu_{i} \xi_{i}(\boldsymbol{x})\\
+   &= \boldsymbol{\mu}^{\mathrm{t}} \boldsymbol{\xi}(\boldsymbol{x})
+
+where :math:`[\boldsymbol{\mu}]_{i} = \mu_{i}` and
+:math:`[\boldsymbol{\xi}(\boldsymbol{x})]_{i} =
+\xi_{i}(\boldsymbol{x})`. However, we are free to choose any function for
+:math:`r`. Specifically we may choose the zero function, such that
+:math:`r(\boldsymbol{x}) = 0` for all :math:`\boldsymbol{x} \in
+\boldsymbol{X}`, whereupon the Gaussian-process fit to the residuals (the
+second term in equation :eq:`gpe_mean`) does all the work of the
+regression. It is common practice to assume a zero mean function (Rasmussen
+and Williams, 2006}.
+
+The covariance function is normally chosen from a number of standard
+models. The most common model is the family of *squared-exponential*
+covariance functions, :math:`(k_\mathrm{SE}(\cdot, \cdot;
+\boldsymbol{\theta}))_{\boldsymbol{\theta} \in \boldsymbol{\Theta}}` where
+
+.. math::
+   :label: cov_se
+	   
+   k_{\mathrm{SE}}(\boldsymbol{x}, \boldsymbol{x}'; \boldsymbol{\theta}) =
+   \sigma_{\mathrm{SE}}^2 \exp \left(-\dfrac{1}{2} (\boldsymbol{x} -
+   \boldsymbol{x}')^\mathrm{t} \boldsymbol{M} (\boldsymbol{x} -
+   \boldsymbol{x}') \right)
+
+and :math:`\boldsymbol{\theta} := (\sigma_\mathrm{SE}^2, \boldsymbol{M})`. The
+*signal variance*, :math:`\sigma_{\mathrm{SE}}^{2}`, is the value of
+:math:`k_\mathrm{SE}` when :math:`\boldsymbol{a} = \boldsymbol{a}'`. The
+*psuedo-metric matrix* is the positive-semidefinite diagonal matrix
+:math:`\boldsymbol{M} = \operatorname{diag}(m_{1}, m_{2}, \ldots ,
+m_{D})`. Using :eq:`cov_se` we may show (see, for example, Leoppky et
+al., 2009) that the mean squared gradient of the prediction is
+      
+.. math::
+
+   \operatorname{E} \left( \frac{\partial Y(\boldsymbol{a})}{\partial
+   a_i} \right)^2 = 2 \sigma_\mathrm{SE}^2 m_i,
+
+and therefore call :math:`m_i` the *sensitivity* of the model to the
+:math:`i`-th parameter. Because :math:`\boldsymbol{M}` is
+positive-semidefinite it has a unique positive-semidefinite inverse, which in
+turn has a unique square root, i.e.  there exists a unique matrix
+:math:`\boldsymbol{L}` (not to be confused with the likelihood, :math:`L`)
+such that :math:`\boldsymbol{M} = \boldsymbol{L}^{-2}`. If
+:math:`\boldsymbol{M}` is diagonal then so is :math:`\boldsymbol{L}` and
+:math:`\boldsymbol{L} = \operatorname{diag}(l_1, l_2, \ldots , l_D)` where
+:math:`m_i = l_i^{-2}` for all :math:`i`. We can see that
+equation :eq:`cov_se` is formally identical to a Gaussian with covariance
+:math:`\boldsymbol{M}^{-1}`. We therefore identify :math:`\boldsymbol{L}^{2}`
+as a covariance matrix and call the element :math:`l_i` the *correlation
+length* (also *scale length*) for the :math:`i`-th parameter.
+
+
+Choosing a design
+-----------------
+
+The most common method for generating the design is Latin hypersquare
+sampling.
+
+
+Numerical instability
+---------------------
+
+The inversion of the matrix :math:`\boldsymbol{K}` is prone to numerical
+instability when it is nearly singlar. To avoid this instability, scale the
+parameter space, :math:`\boldsymbol{X}` to the unit hypersquare.
+
+
+References
+----------
+
+Rasmussen, C.E., and K.I. Williams. 2006. *Gaussian processes for machine
+learning*. Cambridge, MA: MIT Press.
+
+Loeppky, J.L., Sacks, J., and W.J. Welch. 2009. 'Choosing the sample size of a
+computer experiment' in *Technometrics* (51) 366.
