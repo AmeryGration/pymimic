@@ -1,4 +1,1 @@
 docs/build/*
-pymimic/*
-
-!pymimic/__init__
