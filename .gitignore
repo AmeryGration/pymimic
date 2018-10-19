@@ -1,1 +1,8 @@
+build/*
+dist/*
 docs/build/*
+pymimic_dev/*
+pymimic_dev.egg-info
+setup.py
+tests/*
+TODO.rst
