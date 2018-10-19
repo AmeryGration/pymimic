@@ -6,4 +6,4 @@ efficient global optimization.
 
 COMING SOON.
 
-Meanwhile, the documentation is available at <https://readthedocs.org/projects/pymimic/>.
+Meanwhile, the documentation is available at <https://pymimic.readthedocs.io/en/latest/>.
