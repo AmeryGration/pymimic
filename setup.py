@@ -20,7 +20,7 @@ setuptools.setup(
     install_requires=["numpy", "scipy", "matplotlib"],
     classifiers=(
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GNU general public license (GPL)",
+        "License :: OSI Approved :: GNU General Public License (GPL)",
         "Operating System :: OS Independent",
     ),
 )

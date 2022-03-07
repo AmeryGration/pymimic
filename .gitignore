@@ -5,3 +5,4 @@ build/
 dist/
 pymimic.egg-info/
 dev/
+setup.cfg
