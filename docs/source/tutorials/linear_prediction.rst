@@ -1,0 +1,454 @@
+.. _linear_prediction:
+
+*****************
+Linear prediction
+*****************
+
+.. _the_two_flavours_of_linear_prediction:
+
+The two flavours of linear prediction
+#####################################
+
+A linear predictor for a random variable :math:`Z` based on a random
+process :math:`X := \{X_{t}\}_{t \in T}` is a linear combination of
+the elements of :math:`X`. By denoting this predictor :math:`\hat{Z}`
+we have that
+
+.. math::
+
+   \hat{Z} = \sum_{i = 1}^{n}a_{t}X_{t}.
+
+If the random vector :math:`(Z, X)` is second order we may form the
+*best linear predictor* (BLP) by choosing the set of coefficients,
+:math:`(a_{t})_{t \in T}`, so as to minimize the mean-squared error,
+:math:`\operatorname{E}((Z - \hat{Z})^{2})`.
+
+We may further impose the constraint that the expected values of
+:math:`Z` and :math:`\hat{Z}` are equal, i.e. that
+:math:`\operatorname{E}(\hat{Z}) = \operatorname{E}(Z)`. In order to
+do this, we work under the assumption that :math:`\operatorname{E}` is
+an element of a finite-dimensional space of functions, :math:`F`. We
+then minimize the mean-squared error :math:`\operatorname{E}((Z -
+\hat{Z})^{2})` subject to the constraint that
+:math:`\operatorname{E}_{f}(\hat{Z}) = \operatorname{E}_{f}(Z)` for
+all :math:`\operatorname{E}_{f} \in F`. We call this the *best linear
+unbiased predictor* (BLUP) [G62_].
+
+Now extend :math:`T` so that, by writing :math:`Z = X_{t_{0}}`, it
+also indexes both :math:`X` and :math:`Z`, and consider the the random
+random process :math:`(X_{t_{0}}, X)`. The mean-value function is
+
+.. math::
+
+   m: T &\longrightarrow \mathbf{R}
+
+   t    &\longmapsto     \operatorname{E}(X_{t}),
+   
+second moment kernel is
+
+.. math::
+
+   r: T \times T &\longrightarrow \mathbf{R}
+
+   (s, t)        &\longmapsto \operatorname{E}(X_{s}X_{t}),
+
+and the covariance kernel is
+
+.. math::
+
+   k: T \times T &\longrightarrow \mathbf{R}
+
+   (s, t)        &\longmapsto     \operatorname{cov}(X_{s}, X_{t}).
+
+   
+.. _blp:
+
+The best linear predictor
+*************************
+
+Let :math:`X := \{X_{t}\}_{t \in T}` be a random process (considered
+as a column vector) with finite index set :math:`T` and second-moment
+kernel :math:`r`. Let :math:`Z` be a random variable to which the
+second-moment kernel extends by writing :math:`Z = X_{t_{0}}`. The
+best linear predictor (BLP) of :math:`Z` based on :math:`X` is
+
+.. math::
+
+   Z^{*} = \sigma{}^{\mathrm{t}}K^{-1}X
+
+where :math:`\sigma := (r(t_{*}, t_{i}))_{i}` and :math:`K := (r(t_{i},
+t_{j}))_{ij}`. The mean-square error of the BLP is
+
+.. math::
+
+   \operatorname{MSE}(Z^{*}) = r(t_{0}, t_{0}) -
+   \sigma^{\mathrm{t}}K^{-1}\sigma.
+
+Given a realization of :math:`X`, namely :math:`x`, then we may
+compute the realization of :math:`Z^{*}`, namely :math:`z^{*}`, by
+making the substitution :math:`X = x`.
+
+.. _blup:
+
+The best linear unbiased predictor
+**********************************
+
+Now let :math:`k` be the covariance kernel for :math:`X`, and let
+:math:`Z` be a random variable to which the covariance kernel extends
+by writing :math:`Z = X_{t_{0}}`. Let :math:`(f_{i})_{i}` be a
+basis for the space of possible mean-value functions for
+:math:`Z`. The best linear unbiased predictor (BLUP) of :math:`Z`
+based on :math:`X` is
+
+.. math::
+
+   Z^{\dagger} = \Theta^{\dagger} + \sigma^{\mathrm{t}}K^{-1}\mathrm{D}
+
+where
+:math:`\sigma := (k(t_{0}, t_{i}))_{i}`,
+:math:`K := (k(t_{i}, t_{j}))_{ij}`,
+:math:`\Theta^{\dagger} = \phi^{\mathrm{t}}\mathrm{B}`,
+:math:`\mathrm{D} := X - \Phi\mathrm{B}`, and where 
+:math:`\phi = (f_{i}(t_{0}))_{i}`,
+:math:`\Phi := (f_{i}(t_{j}))_{ij}`, and
+:math:`\mathrm{B} :=
+(\Phi^{\mathrm{t}}K^{\,-1}\Phi)^{-1}\Phi^{\mathrm{t}}K^{\,-1}X`.
+Note that :math:`\Theta^{\dagger}` is the best linear unbiased unbiased
+estimator (BLUE) of the mean of :math:`Z`, and :math:`\Phi\mathrm{B}`
+is the tuple of best linear estimators of the the elements of
+:math:`X`.
+The mean-square error of the BLUP is 
+
+.. math::
+
+   \operatorname{MSE}(Z^{\dagger}) = k(t_{0}, t_{0}) -
+   \sigma^{\mathrm{t}}K^{-1}\sigma + (\phi^{\mathrm{t}} -
+   \sigma^{\mathrm{t}}K^{-1}\Phi)(\Phi^{\mathrm{t}}K^{\,-1}\Phi)^{-1}(\phi
+   - \Phi^{\mathrm{t}}K^{-1}\sigma).
+
+Again, given a realization of :math:`X`, namely :math:`x`, then we may
+compute the realization of :math:`Z^{\dagger}`, namely
+:math:`z^{\dagger}`, by making the substitution :math:`X = x`.
+
+.. _prediction_intervals:
+
+Prediction intervals
+--------------------
+
+When forming a prediction interval for :math:`Z` we are interested in
+the quantity :math:`Z - (\hat{Z} - \operatorname{bias}(\hat{Z}))`. Suppose that
+we have a model for the distribution of this quantity, and,
+furthermore, that we have a pair of :math:`\gamma` critical values for this model,
+:math:`c_{1}` and :math:`c_{2}`. Then a :math:`\gamma` prediction
+interval for :math:`Z` is
+
+.. math::
+
+   [\hat{Z} - \operatorname{bias}(\hat{Z}) + c_{1}\sqrt{\operatorname{var}(Z - \hat{Z})}, \hat{Z} - \operatorname{bias}(\hat{Z}) + c_{2}\sqrt{\operatorname{var}(Z - \hat{Z})}]
+   
+where the bias-variance decomposition gives
+
+.. math::
+
+   \operatorname{MSE}(\hat{Z}) = \operatorname{var}(Z - \hat{Z}) + (\operatorname{bias}(\hat{Z}))^{2}.
+   
+In the case that :math:`\hat{Z}` is the BLUP of :math:`Z` then
+:math:`\operatorname{bias}(\hat{Z}) = 0`. However, in the case that
+:math:`\hat{Z}` is the BLP of :math:`Z` we do not in general know
+:math:`\operatorname{bias}(\hat{Z})`.
+
+Furthermore, we do not, in general, have a model for the distribution
+of :math:`Z - (\hat{Z} - \operatorname{bias}(\hat{Z}))` in either the
+case of the BLP or the BLUP. We have two options: (1) assume an
+arbitrary model for distribution (typically Gaussian), or (2) use
+either Chebyshev's inequality or the Vysochanskij--Petunin inequality
+to construct bounds for the prediction interval. In the second case,
+we can construct the worst-case prediction interval, given by
+
+.. math::
+
+   [\hat{Z} - \operatorname{bias}(\hat{Z}) + \lambda\sqrt{\operatorname{var}(Z - \hat{Z})}, \hat{Z} - \operatorname{bias}(\hat{Z}) + \lambda\sqrt{\operatorname{var}(Z - \hat{Z})}]
+
+at confidence level :math:`\gamma = 1 - 4/(9\lambda^{2})`
+(Vysochanskij--Petunin inequality, case of unimodal distribution) or
+:math:`\gamma = 1 - 1/\lambda^{2}` (Chebyshev's inequality, general
+case).
+
+.. _known_and_unknown_quantities:
+
+Known and unknown quantities
+----------------------------
+
+
+We imagine the following three states of knowledge.
+
+   (1) We know the second-moment kernel but not the mean-value
+       function or covariance kernel. In this situation the BLP and
+       the MSE of the BLP are known, but the bias of the BLP, the BLUP
+       and the MSE of the BLUP are not known.
+
+   (2) We know the covariance kernel but not the mean-value function
+       or second-moment function. In this situation the BLUP and MSE
+       of the BLUP are known, but the BLP, the MSE of the BLP, and the
+       bias of the BLP are not known.
+
+   (3) We know the mean-value function and either (equivalently, both)
+       the second-moment kernel or covariance kernel. In this
+       situation the BLP, the MSE of the BLP, and the bias of the BLP,
+       along with the BLUP and the MSE of the BLUP, are all known.
+
+In case 3 we may centre :math:`Z` and :math:`X` by subtracting
+:math:`\mathrm{E}(Z)` and :math:`\mathrm{E}(X)`
+respectively. Furthermore, we may choose the very simplest space of
+pseudoexpectation functions, :math:`F`, namely the space generated by
+the single element :math:`\mathrm{E}`. The second and third terms in
+the BLUP formula then vanish, as does the third term in its MSE
+formula. For centred random variables, the second-moment kernel and
+covariance kernel are identical. Therefore, in this case, the BLP and
+the BLUP coincide.
+
+
+.. _linear_prediction_and_curve_fitting:
+
+Linear prediction and curve fitting
+###################################
+
+We may use linear prediction for the purposes of curve fitting if we
+adopt the conceit that a curve, :math:`z`, is the realization of a
+random process :math:`Z = (Z_{t})_{t \in T}`, indexed by the domain of
+:math:`z`, namely :math:`T \in \mathbf{R}^{d}` for some :math:`d`. Let
+:math:`(Z_{t_{i}})_{i \le n}` be a finite sample of :math:`Z`, let
+:math:`(H_{i})_{i \le n}` be a centred random vector, and consider the
+random vector :math:`X := (Z_{t_{i}} + H_{i})_{i \le n}`, which we
+view as a sample of :math:`Z` contaminated by noise. We can the find a
+linear predictor of any element of :math:`Z` based on :math:`X`. The
+set of all such predictors, :math:`(\hat{Z}_{t})_{t \le T}` is called
+a \'linear smoother\'. In the case that :math:`H_{i}` is 0 for all
+:math:`i` such a smoother is called a \'linear interpolator\'.
+
+
+.. _pymimic_and_linear_predition:
+
+PyMimic and linear prediction
+#############################
+
+Suppose that we have some data, which, for the sake of concreteness,
+we take to be a noisy sample of the two-variable Branin function,
+:math:`f: [-5, 10] \times [0, 15] \longrightarrow \mathbf{R}`, given by
+
+.. math::
+   
+   f(t_{0}, t_{1}) = a (t_{1} - bt_{0}^2 + ct_{0} - r)^2 + s(1 - t)
+   \cos t_{0} + s,
+
+where :math:`a = 1`, :math:`b = 5.1 / (4 \pi^2)`, :math:`c = 5 / \pi`,
+:math:`r = 6`, :math:`s = 10`, and :math:`t = 1 / (8 \pi)`. 
+
+The process is two-fold. First we must generate a set of training data
+for the function. Second we must use these training data to predict
+the value :math:`f(x_{*}, y_{*})` for arbitrary :math:`(x_{*}, y_{*})
+\in [-5, 10] \times [0, 15]`. We may do this using the BLP or the
+BLUP. PyMimic provides the classes :class:`Blp` and :class:`Blup` for
+these purposes.
+
+We may generate the training data using the function
+:func:`design()`. By default this returns an experimental design of
+sample size :math:`10d`, where :math:`d` is the length of the training
+input, using Latin-hypersquare sampling. (See :ref:`design` for an
+overview of design generation in PyMimic.)
+
+.. sourcecode:: python
+
+   >>> bounds = [[-5., 10.], [0., 15.]]
+   >>> ttrain = mim.design(bounds)
+
+Generate the training output. The Branin function is included in
+PyMimic's suite of test functions, :mod:`testfunc`, so we do not need
+to define it ourselves.
+
+.. sourcecode:: python
+
+   >>> import pymimic as mim
+   >>> xtrain = mim.testfunc.branin(*ttrain.T) + 10.*np.random.randn(20)
+
+We have here used homoskedastic errors (i.e. errors of equal
+variance). But note that the heteroskedastic errors may also be used.
+
+
+.. _curve_fitting_using_the_blp:
+
+Curve fitting using the BLP
+***************************
+
+We begin by defining the second-moment kernel we are to use. We will
+use a squared-exponential covariance kernel. (See :ref:`Covariance and
+second-moment kernels <kernels>` for details on specifying
+positive-definite kernels for use with PyMimic.)
+
+.. sourcecode:: python
+
+   >>> import numpy as np
+   >>> from scipy.spatial.distance import cdist
+   >>> def kernel(s, t):
+	   sigma2 = 16000.
+	   M = np.diag([0.08, 0.009])
+           return sigma2*np.exp(-0.5*cdist(s, t, "mahalanobis", VI=M)**2.)
+
+Now generate the values of :math:`t` for which we wish to predict the
+Branin function.
+
+.. sourcecode:: python
+
+   >>> import pymimic as mim
+   >>> t = mim.design(bounds, "regular", 50)
+
+Now compute the predictions and their mean-squared errors by creating
+an instance of the class :class:`Blp` and then then calling its
+method :meth:`xtest`.
+
+.. sourcecode:: python
+
+   >>> blp = mim.Blp(ttrain, xtrain, 10.**2., kernel)
+   >>> x, mse = blp.xtest(t)
+   >>> x
+   [239.14432682 221.71949142 202.8843214  ... 105.88388496  93.78647069
+     82.483802  ]
+   >>> mse
+   [1017.85925982  772.13821831  583.09152623 ...  583.09152623  772.13821831
+    1017.85925982]
+    
+We may construct a biased prediction interval as follows.
+
+.. sourcecode:: python
+
+   >>> x + (- 3.*np.sqrt(mse), 3.*np.sqrt(mse))
+   [[143.43260685 138.35736594 130.44245688 ...  33.44202043  10.42434521
+     -13.22791796]
+    [334.85604678 305.0816169  275.32618593 ... 178.32574948 177.14859617
+     178.19552196]]
+
+Now plot the predictions.
+
+.. sourcecode:: python
+
+   >>> import matplotlib.pyplot as plt
+   >>> plt.imshow(x.reshape(50, 50), extent=[-5., 10., 0., 15.],
+		  origin="lower", cmap="viridis", vmin=-25., vmax=325.)
+   >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x.reshape(50, 50),
+		   colors="k", levels=np.linspace(-25., 325., 15))
+   >>> x_branin = mim.testfunc.branin(*t.T)
+   >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x_branin.reshape(50, 50),
+		   colors="k", linestyles="dashed", levels=np.linspace(-25., 325., 15))
+   >>> plt.scatter(ttrain.T[0], ttrain.T[1])
+   >>> plt.show()
+
+The result is show in :numref:`branin_blp`.
+
+.. _branin_blp:
+
+.. figure:: branin_blp.jpg
+   :figwidth: 100%
+   :align: center
+
+   Left: the Branin function (dashed lines), a noisy sample of the
+   Branin function (filled circles) and curve fitted to tehis samle
+   using the BLP (solid line, colour map). Right: residuals of the
+   fitted curve.
+   
+Note that the covariance matrix, :math:`K`, is available as the
+attribute :attr:`K`.
+
+.. sourcecode:: python
+
+   >>> blp.K
+   [[1.61000000e+04 1.33043190e+04 1.37262145e+04 1.27726667e+04
+     8.21784059e+03 9.02468610e+03 6.49780042e+03 4.69293165e+03
+     3.78126070e+03 2.10656250e+03 1.61945346e+03 1.00963484e+03
+     4.35216671e+02 3.56136025e+02 1.71796863e+02 9.24547191e+01
+     4.99098811e+01 1.86289906e+01 1.06713518e+01 4.45738714e+00]
+    [1.33043190e+04 1.61000000e+04 1.01991815e+04 1.37262145e+04
+     1.27726667e+04 8.66648877e+03 9.02468610e+03 4.02714413e+03
+     4.69293165e+03 3.78126070e+03 1.79604805e+03 1.61945346e+03
+     1.00963484e+03 5.10460241e+02 3.56136025e+02 1.18417794e+02
+     9.24547191e+01 4.99098811e+01 1.76646020e+01 1.06713518e+01]
+    ...
+    [4.45738714e+00 1.06713518e+01 1.86289906e+01 4.99098811e+01
+     9.24547191e+01 1.71796863e+02 3.56136025e+02 4.35216671e+02
+     1.00963484e+03 1.61945346e+03 2.10656250e+03 3.78126070e+03
+     4.69293165e+03 6.49780042e+03 9.02468610e+03 8.21784059e+03
+     1.27726667e+04 1.37262145e+04 1.33043190e+04 1.61000000e+04]]
+
+     
+.. _curve_fitting_using_the_blup:
+
+Curve fitting using the BLUP
+****************************
+
+Curve fitting with the BLUP differs from curve fitting with the BLP
+only insofar as we must also specify a basis for the space of
+mean-value functions. (See :ref:`Bases for the space of mean-value
+functions <basis>` for details on specifying basis functions for use
+with PyMimic.) Let us assume that the mean is constant.
+
+.. sourcecode:: python
+
+   def const(t)
+       return np.ones(len(t))
+
+.. sourcecode:: python
+
+   >>> blup = mim.Blup(ttrain, xtrain, 10.**2., kernel, basis=(const,))
+
+Now proceed as for the case of the BLP.
+
+.. sourcecode:: python
+		
+   >>> x, mse = blup.xtest(t)
+   >>> x
+   [253.14107798 233.17364885 212.21929952 ... 115.21886307 105.24062812
+     96.48055316]
+   >>> mse
+   [1067.61478274  805.45884088  605.2231572  ...  605.2231572   805.45884088
+    1067.61478274]
+
+Since the BLUP is unbiased we may construct unbiased prediction
+intervals.
+
+.. sourcecode:: python
+
+   >>> x + (-3.*np.sqrt(mse), 3.*np.sqrt(mse))
+   [[155.11795293 148.03182852 138.41544857 ...  41.41501212  20.09880779
+      -1.54257189]
+    [351.16420303 318.31546917 286.02315047 ... 189.02271402 190.38244844
+     194.50367821]]
+
+Again, the covariance matrix, :math:`K`, is available as an attribute,
+as are :math:`\mathrm{B}` and :math:`\mathrm{D}`.
+
+.. sourcecode:: python
+
+   >>> blup.Beta
+   [130.71751617]
+   >>> blup.Delta
+   [   4.9222105  -127.80794541  -28.26712086 -131.42748909  -88.10486623
+    -126.24457174  -78.34413201  -98.63325872 -110.28064121  -44.10783169
+    -115.34168051 -104.97364037   44.89235465 -107.46833086   -5.18267962
+    -122.66981728  -83.95459423    0.83137284 -126.72769242  -79.06152086]
+   
+
+References
+----------
+
+.. [G62]
+
+   Goldberger, A. S. 1962. \'Best linear unbiased prediction in
+   the generalized linear regression model\' in *Journal of the
+   American Statistical Association*, 57 (298): 369--75. Available
+   at https://www.doi.org/10.1080/01621459.1962.10480665.
+
+.. [S89]
+
+   Sacks, J., Welch, W. J., Mitchell, T.J.,
+   and H. P. Wynn. 1989. 'Design and analysis of computer experiments'
+   in *Statistical science*, 4 (4): 409--23. Available at
+   https://doi.org/10.1214/ss/1177012413.

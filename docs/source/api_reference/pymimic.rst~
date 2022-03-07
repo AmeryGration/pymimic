@@ -1,0 +1,57 @@
+PyMimic package
+===============
+
+pymimicdev.emulator module
+--------------------------
+.. _emulator_module:
+
+.. automodule:: pymimicdev.emulator
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymimicdev.design module
+------------------------
+.. _design_module:
+
+.. automodule:: pymimicdev.design
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymimicdev.basis module
+-----------------------
+.. _basis_module:
+
+.. automodule:: pymimicdev.basis
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymimicdev.kernel module
+------------------------
+.. _kernel_module:
+
+.. automodule:: pymimicdev.kernel
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymimicdev.testfunc module
+--------------------------
+.. _testfunc_module:
+
+.. automodule:: pymimicdev.testfunc
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pymimicdev.plot module
+----------------------
+.. _plot_module:
+
+.. automodule:: pymimicdev.plot
+    :members:
+    :undoc-members:
+    :show-inheritance:
+

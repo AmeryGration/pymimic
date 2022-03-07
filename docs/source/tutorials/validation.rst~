@@ -1,0 +1,18 @@
+.. _validation:
+
+**********
+Validation
+**********
+
+Leave-one-out cross-validation score.
+
+What if there are erros on the data?
+
+
+PyMimic and validation
+######################
+
+.. sourcecode:: python
+
+   >>> blp.loocv
+   ...

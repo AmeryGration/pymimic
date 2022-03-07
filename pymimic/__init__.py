@@ -1,6 +1,8 @@
-import pymimic_dev.covfunc
-import pymimic_dev.testfunc
-import pymimic_dev.prep
-import pymimic_dev.plot
+import pymimic.kernel
+import pymimic.basis
+import pymimic.testfunc
+import pymimic.plot
 
-from pymimic_dev.emulation import *
+from pymimic.emulator import *
+from pymimic.design import *
+

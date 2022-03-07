@@ -1,9 +1,8 @@
 PyMimic
 =======
 
-PyMimic is a pure-Python implementation of Gaussian-process emulation and
-efficient global optimization.
+A pure-Python implementation of linear prediction intended for use in
+curve-fitting and the emulation of expensive computer experiments.
 
-COMING SOON.
-
-Meanwhile, the documentation is available at <https://pymimic.readthedocs.io/en/latest/>.
+To access the documentation, open the file
+``docs/build/html/index.html`` in a web browser.

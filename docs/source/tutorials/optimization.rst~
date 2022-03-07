@@ -1,0 +1,252 @@
+.. _optimization:
+
+*********************************
+Optimization of linear predictors
+*********************************
+
+Two approaches to optimization
+##############################
+
+The BLP and BLUP require us to know some combination of the first and
+second moments of the distribution of :math:`(Z, X)`. However, in
+practice we may not know any of these these. In particular, we tend
+not to know the second-moment or covariance kernels, but instead have
+models for them, i.e. we typically know that either the second-moment
+or covariance kernel is a member of some parameterized family of
+positive-definite kernels. We would like to recover the true parameter
+of such a model. There are two commonly used approaches to this
+problem: the method of the maximum likelihood, and the method of
+leave-one-out cross-validation.
+
+Method of maximum likelihood
+----------------------------
+.. _method_of_maximum_likelihood:
+
+Suppose that we have a model for the distribution of :math:`X`,
+i.e. suppose that we know the distribution to be a member of some
+parameterized family of distributions, and that these distributions
+are completely specified by their first and second moments (as is the
+case for the Gaussian distribution, for example). We can choose the
+model parameter so as to make the data, :math:`x`, most probable.
+
+Consider states of knowledge corresponding to those we considered
+before (:ref:`Known and unknown quantities, case 3
+<known_and_unknown_quantities>`).
+
+   .. _case_1:
+   
+   (1) We have a model of the second-moment kernel but do not know the
+       mean-value function or covariance kernel. In this case, we do
+       not know enough to be able to optimize the model parameter
+       using the method of maximum likelihood.
+
+   .. _case_2:
+   
+   (2) We have a model of the covariance kernel but do not know the
+       mean-value function or second-moment function. In this case, we
+       do not know enough to be able to optimize the parameter of the
+       second-moment kernel. However, we may instead optimize the
+       concentrated likelihood, by substituting the BLUE of :math:`X`,
+       namely :math:`\Phi\mathrm{B}`, for its mean.
+
+   .. _case_3:
+   
+   (3) We know the mean-value function and have a model of either
+       (equivalently, both) the second-moment kernel or covariance
+       kernel. In this situation we can recover the parameter of
+       either model using the method of maximum likelihood. Denote the
+       model of its probability density function
+       :math:`(f_{\theta})_{\theta \in \Theta}`, where (because we
+       know the mean-value function) a parameter :math:`\theta` in
+       fact specifies the second-moment or covariance kernel. The
+       maximum-likelihood estimate of the true parameter tuple is
+       found by maximizing the likelihood, given by
+
+       .. math::
+
+	  L(\theta; x) := f_{\theta}(x).
+
+.. _method_of_leaveoneout_crossvalidation:
+
+Method of leave-one-out cross-validation
+----------------------------------------
+
+If we do not have a model of the distribution of :math:`X` then we may
+use the method of leave-one-out cross-validation (LOOCV), i.e. we may
+choose the parameter tuple that minimizes the LOOCV score (see
+:ref:`Validation <validation>`) in both the case of the BLP and the
+BLUP.
+
+Suppose that the second-moment kernel model is of the form
+:math:`k(s, t) = a{}f(s, t)` for some constant :math:`a` and some
+positive-semidefinite kernel :math:`f`. In this case the method of
+leave-one-out cross-validation will fail to find :math:`a` if there
+are no errors on the training outputs (i.e. if ``var_xtrain`` is
+``None`` or a tuple of zeros). This is because the BLP of a random
+variable is independent of :math:`a`.
+
+
+Choosing the search space
+-------------------------
+
+In general, there will be multiple maxima of the likelihood and LOOCV
+score, some of which may lead to under- or over-fitting of the
+data. For a discussion of this issue see Rasmussen & Williams [RW06_].
+
+Many kernels are based on the distance between two points, given by 
+
+.. math::
+
+   \|t - s\| = \sqrt{(t - s)^{\mathrm{t}}M(t - s)}
+
+where :math:`M` is a metric matrix. Typically the metric matrix is
+taken to be diagonal. In this case we may interpret the diagonal
+elements of :math:`M` as a length scale: :math:`m_{i} =
+1/l_{i}^{2}`. If the length scale is smaller than the average
+separation of the points in our experimental design, :math:`a`, then
+the BLP and BLUP will over-fit the data. We may take the value
+:math:`1/a^{2}` to be an upper bound on the permitted values of the
+elements on :math:`M`. 
+
+
+PyMimic and the optimization of linear predictors
+#################################################
+
+A positive-semidefinite kernel ``func(x, y, *args) -> array_like``
+(:ref:`PyMimic, second-moment and covariance kernels
+<pymimic_secondmoment_and_covariance_kernels>`) that accepts
+additional arguments naturally provides a model of a second-moment or
+covariance kernel, with ``*args`` providing the parameter tuple. The
+:class:`Blp` and :class:`Blup` classes both have a method :meth:`opt`
+that allows us to optimize this parameter using either the method of
+maximum likelihood or the method of LOOCV.  To specify the
+optimization method we use the keyword argument ``opt_method`` (which
+accepts values ``"mle"`` and ``"loocv"``). To specify the bounds of
+the search region use the keyword argument ``bounds``.
+
+If the maximum likelihood method is specified, the BLP is optimized
+under the assumption that :math:`X` is a centred Gaussian random
+process (corresponding to :ref:`case 3 <case_3>`, above), and the BLUP
+is optimized using the concentrated likelihood (corresponding to
+:ref:`case 2 <case_2>`, above).
+
+The optimization is performed using multiple starts of the Scipy
+function :func:`optimize.minimize`, with the best result being
+returned as an ``OptimizeResult`` object. Starting points are chosen
+using a Latin hypercube design.
+
+By way of example, let us again fit a curve to a sample of the
+Branin function using the squared-exponential covariance kernel.
+Again, generate the sample, as follows.
+
+.. sourcecode:: python
+
+   >>> bounds = [[-5., 10.], [0., 15.]]
+   >>> ttrain = mim.design(bounds)
+   >>> xtrain = mim.testfunc.branin(*ttrain.T) + 10.*np.random.randn(20)
+
+Optimizing the BLP
+------------------
+.. _optimizing_the_blp:
+
+Create an instance of a :class:`Blp` class using the
+squared-exponential kernel.
+
+.. sourcecode:: python
+
+   >>> blp = mim.Blp(ttrain, xtrain, 10.**2., mim.kernel.squared_exponential)
+
+The parameter of the family of squared-exponential kernels is
+:math:`\theta = (\sigma^{2}, m_{1}, m_{2}, \dots, m_{d})`. The first
+element of the parameter is the variance. The remaining elements are
+the diagonal elements of the metric matrix.
+
+The average separation of the points in our design is approximately
+:math:`\sqrt{(15 \times 15)/20} = 3.4`. With this knowledge we may
+optimize the BLUP as follows.
+
+   >>> argbounds = [[0., np.inf], [0., 3.4**-2.], [0., 3.4**-2.]]
+   >>> gpe.opt("mle", bounds=argbounds)
+      direc: array([[-7.19669309e-07, -8.06710717e-04,  1.41552230e-04],
+	  [-2.15271927e-06,  6.09338290e-04,  2.85734616e-04],
+	  [ 1.34616913e-05, -5.72761932e-03, -3.67099296e-04]])
+	fun: 153.47615541248797
+    message: 'Optimization terminated successfully.'
+       nfev: 525
+	nit: 9
+     status: 0
+    success: True
+	  x: array([1.57074646, 0.07265018, 0.00570691])
+
+The :meth:`opt` method returns a Scipy ``optimize.OptimizeResult``
+object, as well as setting the attribute :attr:`args`. We may access
+this attribute as follows.
+
+.. sourcecode:: python
+
+   >>> gpe.args
+   [20051.743666841663, 0.07264998681075786, 0.005706895456424384]
+
+By default, ``opt_method`` is set to ``"mle"``. You may pass the
+argument ``"loocv"`` to optimize the BLP using the method of LOOCV. Be
+aware that LOOCV would fail to find :math:`\sigma^{2}` if there were
+no errors associated with the sample (:ref:`Method of leave-one-out
+cross-validation <method_of_leaveoneout_crossvalidation>`).
+
+If a kernel from the submodule :mod:`kernel` is being used then the
+bounds are computed automatically, and do not need to be passed to the
+optimization method. (If bounds are in fact passed to the optimization
+method then those bounds are used instead of being automatically
+computed.)  The bounds are stored as the attribute :attr:`argbounds`.
+
+.. sourcecode:: python
+
+   >>> blp.argbounds
+   [[0.0, inf], [0.0, 0.08650519031141869], [0.0, 0.08650519031141869]]
+
+If the optimized predictor clearly over- or under-fits the data, it is
+wise to run the optimizer again, or to inspect the likelihood
+(equivalently, LOOCV score) more closely. You can to this by plotting
+it, or by inspecting all maxima found by the optimzier. To do this,
+use a callback function, as follows.
+
+   >>> def callback(args):
+   ...     print(args)
+   ...
+   >>> blp.opt(callback=callback, options={"disp": True})
+   [1.5073215 0.02294477 0.00959481]
+   [1.5073215 0.0232158  0.00957953]
+   Optimization terminated successfully.
+            Current function value: 154.540318
+	    Iterations: 2
+	    Function evaluations: 85
+   ...
+   Optimization terminated successfully.
+            Current function value: 154.540318
+	    Iterations: 4
+	    Function evaluations: 173
+      direc: array([[1., 0., 0.],
+                    [0., 1., 0.],
+		    [0., 0., 1.]])
+        fun: 154.54031809310428
+    message: 'Optimization terminated successfully.'
+       nfev: 173
+        nit: 4
+     status: 0
+    success: True
+          x: array([1.57073215, 0.02321549, 0.00957954])
+
+Optimizing the BLUP
+-------------------
+.. _optimizing_the_blup:
+
+The BLUP can be optimized in exactly the same way.
+
+
+References
+##########
+
+.. [RW06]
+
+   Rasmussen, C.E., and C.K.I. Williams. 2006. *Gaussian processes for
+   machine learning*. Cambridge: MIT Press.
