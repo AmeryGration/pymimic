@@ -17,7 +17,7 @@ setuptools.setup(
     package_data={"pymimic": ["design_data/*.dat"]},
     packages=setuptools.find_packages(),
     python_requires=">=3.6.9",
-    install_requires=["numpy", "scipy", "matplotlib"],
+    install_requires=["numpy>=1.19.5", "scipy>=1.5.4", "matplotlib>=3.3.4"],
     classifiers=(
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License (GPL)",
