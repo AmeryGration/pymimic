@@ -39,10 +39,10 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx_rtd_theme'
 ]
 
-# import mock
-# mock_modules = ["numpy", "scipy", "matplotlib"]
-# for mod_name in mock_modules:
-#     sys.modules[mod_name] = mock.Mock()
+import mock
+mock_modules = ["numpy", "scipy", "matplotlib"]
+for mod_name in mock_modules:
+    sys.modules[mod_name] = mock.Mock()
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
