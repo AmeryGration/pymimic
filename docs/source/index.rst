@@ -60,13 +60,14 @@ prediction and curve fitting: Gaussian-process emulation in theory and
 practice\' (2022) by Sylvy Anscombe and Amery Gration (<>).
 
 
-Indices and tables
-------------------
+..
+   Indices and tables
+   ------------------
 
-* :ref:`genindex`
+   * :ref:`genindex`
 
-  Quick access to all modules
+     Quick access to all modules
 
-* :ref:`modindex`
-  
-  All classes and functions
+   * :ref:`modindex`
+
+     All classes and functions
