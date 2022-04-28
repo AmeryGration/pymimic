@@ -59,14 +59,3 @@ License. If you make use of it then please cite the paper \'Linear
 prediction and curve fitting: Gaussian-process emulation in theory and
 practice\' (forthcoming) by Sylvy Anscombe and Amery Gration.
 
-
-Indices and tables
-------------------
-
-* :ref:`genindex`
-
-  Quick access to all modules
-
-* :ref:`modindex`
-
-  All classes and functions
