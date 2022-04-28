@@ -234,11 +234,11 @@ PyMimic and linear prediction
 
 Suppose that we have some data, which, for the sake of concreteness,
 we take to be a noisy sample of the two-variable Branin function,
-:math:`f: [-5, 10] \times [0, 15] \longrightarrow \mathbf{R}`, given by
+:math:`x: [-5, 10] \times [0, 15] \longrightarrow \mathbf{R}`, given by
 
 .. math::
    
-   f(t_{0}, t_{1}) = a (t_{1} - bt_{0}^2 + ct_{0} - r)^2 + s(1 - t)
+   x(t_{0}, t_{1}) = a (t_{1} - bt_{0}^2 + ct_{0} - r)^2 + s(1 - t)
    \cos t_{0} + s,
 
 where :math:`a = 1`, :math:`b = 5.1 / (4 \pi^2)`, :math:`c = 5 / \pi`,
@@ -246,10 +246,10 @@ where :math:`a = 1`, :math:`b = 5.1 / (4 \pi^2)`, :math:`c = 5 / \pi`,
 
 The process is two-fold. First we must generate a set of training data
 for the function. Second we must use these training data to predict
-the value :math:`f(x_{*}, y_{*})` for arbitrary :math:`(x_{*}, y_{*})
-\in [-5, 10] \times [0, 15]`. We may do this using the BLP or the
-BLUP. PyMimic provides the classes :class:`Blp` and :class:`Blup` for
-these purposes.
+the value :math:`x(t_{0}^{*}, t_{1}^{*})` for arbitrary :math:`(t_{0}^{*},
+t_{1}^{*}) \in [-5, 10] \times [0, 15]`. We may do this using the BLP or
+the BLUP. PyMimic provides the classes :class:`Blp` and :class:`Blup`
+for these purposes.
 
 We may generate the training data using the function
 :func:`design()`. By default this returns an experimental design of
@@ -272,7 +272,7 @@ to define it ourselves.
    >>> xtrain = mim.testfunc.branin(*ttrain.T) + 10.*np.random.randn(20)
 
 We have here used homoskedastic errors (i.e. errors of equal
-variance). But note that the heteroskedastic errors may also be used.
+variance). But note that heteroskedastic errors may also be used.
 
 
 .. _curve_fitting_using_the_blp:
@@ -299,7 +299,6 @@ Branin function.
 
 .. sourcecode:: python
 
-   >>> import pymimic as mim
    >>> t = mim.design(bounds, "regular", 50)
 
 Now compute the predictions and their mean-squared errors by creating
@@ -332,14 +331,15 @@ Now plot the predictions.
 .. sourcecode:: python
 
    >>> import matplotlib.pyplot as plt
-   >>> plt.imshow(x.reshape(50, 50), extent=[-5., 10., 0., 15.],
-		  origin="lower", cmap="viridis", vmin=-25., vmax=325.)
+   >>> im = plt.imshow(x.reshape(50, 50), extent=[-5., 10., 0., 15.],
+                       origin="lower", vmin=-25., vmax=250.)
    >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x.reshape(50, 50),
-		   colors="k", levels=np.linspace(-25., 325., 15))
+		   levels=np.linspace(-25., 250., 12))
    >>> x_branin = mim.testfunc.branin(*t.T)
    >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x_branin.reshape(50, 50),
-		   colors="k", linestyles="dashed", levels=np.linspace(-25., 325., 15))
+		   linestyles="dashed", levels=np.linspace(-25., 250., 12))
    >>> plt.scatter(ttrain.T[0], ttrain.T[1])
+   >>> plt.colorbar(im)
    >>> plt.show()
 
 The result is show in :numref:`branin_blp`.
@@ -351,7 +351,7 @@ The result is show in :numref:`branin_blp`.
    :align: center
 
    Left: the Branin function (dashed lines), a noisy sample of the
-   Branin function (filled circles) and curve fitted to tehis samle
+   Branin function (filled circles) and curve fitted to this samle
    using the BLP (solid line, colour map). Right: residuals of the
    fitted curve.
    

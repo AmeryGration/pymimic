@@ -346,7 +346,7 @@ class Blp(_LinearPredictor):
 
     args : tuple
 
-        Additional arguments required to specify ``covfunc``
+        Additional arguments required to specify ``covfunc```
 
     kernel : callable
 
@@ -408,9 +408,7 @@ class Blp(_LinearPredictor):
     See also
     --------
 
-    :class:`Blup`
-
-        Best linear unbiased predictor.
+    :class:`Blup` : Best linear unbiased predictor.
 
     Notes
     -----
@@ -606,18 +604,19 @@ class Blp(_LinearPredictor):
         independent of :math:`a`.
 
         Typically, the likelihood and leave-one-out cross-validation
-        score have multiple extrema. Use :func:`Blp.opt` in the
+        score have muliple extrema. Use :func:`Blp.opt` in the
         knowledge that the global optimum may not be found, and that
         the global optimum may in any case result in over- or
-        under-fitting of the data [RW06_].
+        under-fitting of the data [:ref:`RW06
+`].
 
         See also
         --------
 
-        :func:`scipy.optimize.minimize`
+        :mod:`scipy.optimize.minimize`
 
-           The Scipy function for the minimization of a scalar
-           function of one or more variables.
+           The Scipy function for the minimization of a scalar function of
+           one or more variables.
 
         Notes
         -----
@@ -710,18 +709,18 @@ class Blp(_LinearPredictor):
 
         t : (m, d) array_like
 
-           Test input.
+            Test input.
 
         Returns
         -------
 
         xtest : (m,) ndarray
 
-           Test output.
+            Test output.
 
         mse : (m,) ndarray, optional
 
-           Mean-squared error in the test output.
+            Mean-squared error in the test output.
 
         Raises
         ------
@@ -735,9 +734,7 @@ class Blp(_LinearPredictor):
         See also
         --------
 
-        :func:`Blup.xtest`
-
-           Best linear predictor
+        :meth:`Blup.xtest()` : Best linear predictor
 
         Notes
         -----        
@@ -967,9 +964,7 @@ class Blup(_LinearPredictor):
     See also
     --------
 
-    :class:`Blp`
-
-       Best linear predictor.
+    :class:`Blp` : Best linear predictor.
 
     Notes
     -----
@@ -1275,7 +1270,7 @@ class Blup(_LinearPredictor):
         independent of :math:`a`.
 
         Typically, the likelihood and leave-one-out cross-validation
-        score have multiple extrema. Use :meth:`Blup.opt()` in the
+        score have muliple extrema. Use :meth:`Blup.opt()` in the
         knowledge that the global optimum may not be found, and that
         the global optimum may in fact result in over- or
         under-fitting of the data [RW06_].
@@ -1283,7 +1278,7 @@ class Blup(_LinearPredictor):
         See also
         --------
 
-        :func:`scipy.optimize.minimize`
+        :mod:`scipy.optimize.minimize`
 
            The Scipy function for the minimization of a scalar function of
            one or more variables.
@@ -1406,9 +1401,7 @@ class Blup(_LinearPredictor):
         See also
         --------
 
-        :func:`Blup.xtest`
-
-           Best linear predictor
+        :func:`Blup.xtest' : Best linear predictor
 
         Notes
         -----        

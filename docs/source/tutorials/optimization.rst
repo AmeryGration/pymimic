@@ -166,7 +166,7 @@ The average separation of the points in our design is approximately
 optimize the BLUP as follows.
 
    >>> argbounds = [[0., np.inf], [0., 3.4**-2.], [0., 3.4**-2.]]
-   >>> gpe.opt("mle", bounds=argbounds)
+   >>> blp.opt("mle", bounds=argbounds)
       direc: array([[-7.19669309e-07, -8.06710717e-04,  1.41552230e-04],
 	  [-2.15271927e-06,  6.09338290e-04,  2.85734616e-04],
 	  [ 1.34616913e-05, -5.72761932e-03, -3.67099296e-04]])
@@ -184,13 +184,13 @@ this attribute as follows.
 
 .. sourcecode:: python
 
-   >>> gpe.args
+   >>> blp.args
    [20051.743666841663, 0.07264998681075786, 0.005706895456424384]
 
 By default, ``opt_method`` is set to ``"mle"``. You may pass the
 argument ``"loocv"`` to optimize the BLP using the method of LOOCV. Be
-aware that LOOCV would fail to find :math:`\sigma^{2}` if there were
-no errors associated with the sample (:ref:`Method of leave-one-out
+aware that LOOCV will fail to find :math:`\sigma^{2}` if there are no
+errors associated with the sample (:ref:`Method of leave-one-out
 cross-validation <method_of_leaveoneout_crossvalidation>`).
 
 If a kernel from the submodule :mod:`kernel` is being used then the

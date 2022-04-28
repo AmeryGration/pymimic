@@ -9,7 +9,7 @@ You may install PyMimic from the command line using PIP.
 
    $ pip install pymimic
 
-It requires Python version 3.5 or greater.
+It requires Python version 3.6 or greater.
 
 You may also install PyMimic from the source distribution, available
 at the PyMimic repository

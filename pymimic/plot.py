@@ -13,9 +13,9 @@ import matplotlib.pyplot as plt
 
 def plot(Z, extent, figsize=(3.3071, 3.3071), xlabel_text=None,
          ylabel_text=None, label_kwargs={}, xtick_loc=None,
-         ytick_loc=None, ticks_kwargs=None, imshow=True,
-         imshow_kwargs={}, contour=True, contour_kwargs={},
-         cbar=True, cbar_kwargs={}):
+         ytick_loc=None, ticks_kwargs={}, imshow=True,
+         imshow_kwargs={}, contour=True, contour_kwargs={}, cbar=True,
+         cbar_kwargs={}, gridspec_kwargs={}):
     r"""Return plot of the one- and two-dimensional sums of an array.
     
     Parameters
@@ -80,6 +80,10 @@ def plot(Z, extent, figsize=(3.3071, 3.3071), xlabel_text=None,
     cbar_kwargs : dict
 
         Keyword arguments to be passed to :func:`matplotlib.pyplot.colorbar`.
+
+    gridspec_kwargs : dict
+
+        Keyword arguments to be passed to :func:`matplotlib.pyplot.subplots`.
 
     Returns
     -------
@@ -163,7 +167,8 @@ def plot(Z, extent, figsize=(3.3071, 3.3071), xlabel_text=None,
     if "origin" not in imshow_kwargs:
         imshow_kwargs["origin"] = "lower"
     # Generate plots
-    fig, rows = plt.subplots(dim, dim, figsize=figsize)
+    fig, rows = plt.subplots(dim, dim, figsize=figsize,
+                             gridspec_kw=gridspec_kwargs)
     for i, row in enumerate(rows):
         for j in range(dim):
             ax = row[j]
@@ -250,10 +255,10 @@ def plot(Z, extent, figsize=(3.3071, 3.3071), xlabel_text=None,
         cbar = fig.colorbar(im, cax=cax, **cbar_kwargs)
     return fig
 
-def diagnostic(xtrain, residuals, var_residuals,
-               figsize=(6.6142, 3.3071), xlabels=None, ylabels=None,
-               xlim = None, ylim=None, ylabel_offset=None,
-               subplots_kwargs={}, plot_kwargs={}, scatter_kwargs={}):
+def diagnostic(xtrain, residuals, var_residuals, figsize=(3.3071, 1.6535),
+               xlabel_text=None, ylabel_text=None, xlims=None, ylims=None,
+               xtick_loc=None, ytick_loc=None, ticks_kwargs={},
+               plot_kwargs={}, scatter_kwargs={}, gridspec_kwargs={}):
     r"""Return diagnostic plots for a linear predictor
 
     Returns a two-panel plot consisting of (1) the standardized
@@ -279,13 +284,41 @@ def diagnostic(xtrain, residuals, var_residuals,
 
         Figure size, in the form `(width, height)`.
 
-    xlabels : (dim,) tuple, optional
+    xlabel_text : (dim,) array_like, optional
 
-        Tuple of labels for :math:`x` axes.
+        Labels for :math:`x` axes.
 
-    ylabels : (dim,) tuple, optional
+    ylabel_text : (dim,) array_like, optional
 
-        Tuple of labels for :math:`y` axes.
+        Labels for :math:`y` axes.
+
+    xtick_loc : (dim,) array_like, optional
+
+        Position of :math:`x`-ticks for each :math:`x`-axis.
+
+    ytick_loc : (dim,) array_like, optional
+
+        Position of :math:`y`-ticks for each :math:`y`-axis.
+
+    ticks_kwargs : dict, optional
+
+        Keyword arguments to be passed to :func:`matplotlib.axis.Axis.set_xticks` and :func:`matplotlib.axis.Axis.set_yticks`
+    
+    plot_kwargs :dict, optional
+
+        Keyword arguments to be passed to :func:`matplotlib.pyplot.plot`.
+
+    scatter_kwargs :dict, optional
+
+        Keyword arguments to be passed to :func:`matplotlib.pyplot.scatter`.
+
+    plot_kwargs :dict, optional
+
+        Keyword arguments to be passed to :func:`matplotlib.pyplot.plot`.
+
+    gridspec_kwargs : dict
+
+        Keyword arguments to be passed to :func:`matplotlib.pyplot.subplots`.
 
     Returns
     -------
@@ -335,42 +368,74 @@ def diagnostic(xtrain, residuals, var_residuals,
        :align: center
 
     """
-    # Compute tandardized residual
+    # left_margin = 0.5/figsize[0]
+    # right_margin = 1. - 0.5/figsize[0]
+    # bottom_margin = 0.25/figsize[1]
+    # top_margin = 1. - 0.25/figsize[1]
+    # wspace = 0.3
+    # if "left" not in gridspec_kwargs:
+    #     gridspec_kwargs["left"] = left_margin
+    # if "right" not in gridspec_kwargs:
+    #     gridspec_kwargs["right"] = right_margin
+    # if "bottom" not in gridspec_kwargs:
+    #     gridspec_kwargs["bottom"] = bottom_margin
+    # if "top" not in gridspec_kwargs:
+    #     gridspec_kwargs["top"] = top_margin
+    # if "wspace" not in gridspec_kwargs:
+    #     gridspec_kwargs["wspace"] = wspace
+    if "ls" not in plot_kwargs:
+        plot_kwargs["ls"] = "--"
+    if "s" not in scatter_kwargs:
+        scatter_kwargs["s"] = 4.
+    
+    # Compute standardized residual
     residuals_std = residuals/np.sqrt(var_residuals)
     # Make plots
-    fig, ax = plt.subplots(1, 2, figsize=figsize,
-                           gridspec_kw={"hspace":0.5})
+    fig, ax = plt.subplots(1, 2, figsize=figsize, gridspec_kw=gridspec_kwargs)
 
     # LOOCV standardized residuals
-    ax[0].scatter(xtrain, residuals_std, s=4.)
-    ax[0].plot([min(xtrain), max(xtrain)], [0., 0.], color="k",
-               ls="dashed")
-    y_lim = np.max(np.abs(ax[0].get_ylim()))
-    ax[0].set_xlim(xlim)
-    ax[0].set_ylim(- y_lim, y_lim)
-    ax[0].set_aspect(
-        (ax[0].get_xlim()[1] - ax[0].get_xlim()[0])
-        /(ax[0].get_ylim()[1] - ax[0].get_ylim()[0])
-        )
-    ax[0].set_xlabel(r"$X^{\dagger}_{-i}$")
-    ax[0].set_ylabel(r"$\hat{d}(X^{\dagger}_{-i})$")
+    ax[0].scatter(xtrain, residuals_std, **scatter_kwargs)
+    ax[0].plot([min(xtrain), max(xtrain)], [0., 0.], **plot_kwargs)
+    if xlims:
+        ax[0].set_xlim(xlims[0])
+    if ylims:
+        ax[0].set_ylim(ylims[0])
+    else:
+        y_lim = np.max(np.abs(ax[0].get_ylim()))
+        ax[0].set_ylim(- y_lim, y_lim)
+    # ax[0].set_aspect(
+    #     (ax[0].get_xlim()[1] - ax[0].get_xlim()[0])
+    #     /(ax[0].get_ylim()[1] - ax[0].get_ylim()[0])
+    #     )
+    ax[0].set_aspect("auto")
+    if xtick_loc:
+        ax[0].set_xticks(xtick_loc[0], **ticks_kwargs)
+    ax[0].set_xlabel(r"$\hat{X}_{-i}$")
+    ax[0].set_ylabel(r"$\hat{d}(\hat{X}_{-i})$")
 
     # LOOCV predictions against true value
-    ax[1].scatter(xtrain, xtrain - residuals, s=4.)
-    lim_min = np.min((ax[1].get_xlim()[0], ax[1].get_ylim()[0]))
-    lim_max = np.max((ax[1].get_xlim()[1], ax[1].get_ylim()[1]))
-    ax[1].set_xlim(lim_min, lim_max)
-    ax[1].set_ylim(lim_min, lim_max)
-    ax[1].set_aspect(
-        (ax[1].get_xlim()[1] - ax[1].get_xlim()[0])
-        /(ax[1].get_ylim()[1] - ax[1].get_ylim()[0])
-        )
+    ax[1].scatter(xtrain, xtrain - residuals, **scatter_kwargs)
+    if xlims:
+        ax[1].set_xlim(xlims[1])
+    if ylims:
+        ax[1].set_ylim(ylims[1])
+    else:
+        lim_min = np.min((ax[1].get_xlim()[0], ax[1].get_ylim()[0]))
+        lim_max = np.max((ax[1].get_xlim()[1], ax[1].get_ylim()[1]))
+        ax[1].set_xlim(lim_min, lim_max)
+    # ax[1].set_ylim(lim_min, lim_max)
+    # ax[1].set_aspect(
+    #     (ax[1].get_xlim()[1] - ax[1].get_xlim()[0])
+    #     /(ax[1].get_ylim()[1] - ax[1].get_ylim()[0])
+    #     )
+    ax[1].set_aspect("auto")
+    if xtick_loc:
+        ax[1].set_xticks(xtick_loc[1], **ticks_kwargs)
     lim_lower = np.min((ax[1].get_xlim()[0], ax[1].get_ylim()[0]))
     lim_upper = np.max((ax[1].get_xlim()[1], ax[1].get_ylim()[1]))
     ax[1].plot([lim_lower, lim_upper], [lim_lower, lim_upper],
-               color="k", ls="dashed")
-    ax[1].set_xlim(lim_lower, lim_upper)
-    ax[1].set_ylim(lim_lower, lim_upper)
+               **plot_kwargs)
     ax[1].set_xlabel(r"$X_{i}$")
-    ax[1].set_ylabel(r"$X^{\dagger}_{-i}$")
+    ax[1].set_ylabel(r"$\hat{X}_{-i}$")
+    plt.tight_layout()
     return fig

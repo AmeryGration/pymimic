@@ -22,10 +22,10 @@ for the three-dimensional region :math:`[0, 1] \times [0, 1] \times
 .. sourcecode:: python
 
    >>> bounds = [[0., 1.], [0., 1.], [0., 1.]]
-   >>> mim.design(bounds, method="lhs", n=10)
-   array([[0.05, 0.55, 0.75],
-          ...
-	  [0.95, 0.85, 0.15]])
+   >>> mim.design(bounds, method="lhs", n=30)
+   array([[0.98333333, 0.35      , 0.75      ],
+	  ...
+	  [0.01666667, 0.71666667, 0.38333333]])
 
 In fact, the function :func:`design` returns a Latin-hypercube
 sample of size :math:`10d` by default. Such a design may be generated
@@ -34,13 +34,13 @@ more simply as follows.
 .. sourcecode:: python
 
    >>> mim.design(bounds)
-   array([[0.05, 0.55, 0.75],
-          ...
-	  [0.95, 0.85, 0.15]])
+   array([[0.01666667, 0.35      , 0.38333333],
+	  ...
+	  [0.98333333, 0.71666667, 0.75      ]])
 
 PyMimic generates Latin-hypercube designs using look-up tables
 generated using the method of maximum projection [JB15_, BJ18_] and
-then randomly rotated and reflected.
+then randomly rotates and reflects them.
 
 .. _gmlhs:
 
@@ -54,10 +54,10 @@ inputs at the boundary of the sample region.
 .. sourcecode:: python
 
    >>> bounds = [[0., 1.], [0., 1.], [0., 1.]]
-   >>> mim.design(bounds, method="gmlhs", n=10)
-   array([[0.00615583, 0.57821723, 0.85355339],
-          ...
-	  [0.99384417, 0.94550326, 0.05449674]])
+   >>> mim.design(bounds, method="gmlhs", n=30)
+   array([[9.99314767e-01, 8.14660196e-01, 8.53553391e-01],
+	  ...
+	  [6.85232623e-04, 2.73004750e-01, 3.20816025e-01]])
 
 PyMimic generates a generalized Latin-hypercube design by transforming
 a Latin-hypercube design [lhs_].
@@ -72,7 +72,7 @@ We may also generate a design using a regular lattice.
 .. sourcecode:: python
 
    >>> bounds = [[0., 1.], [0., 1.], [0., 1.]]
-   >>> mim.design(bounds, method="regular", n=10)
+   >>> mim.design(bounds, method="regular", n=30)
    array([[0.        , 0.        , 0.        ],
           ...
 	  [1.        , 1.        , 1.        ]])
@@ -87,7 +87,7 @@ We may also generate a design using random sampling.
 .. sourcecode:: python
 
    >>> bounds = [[0., 1.], [0., 1.], [0., 1.]]
-   >>> mim.design(bounds, method="random", n=10)
+   >>> mim.design(bounds, method="random", n=30)
    array([[0.01865849, 0.457221  , 0.00652817],
           ...
 	  [0.25116118, 0.46654406, 0.22595428]])

@@ -84,48 +84,14 @@ of this function and initialize a :class:`Blup` class.
     success: True
 	  x: array([1.49828726, 0.738667  ])
    
-Now compute the best linear unbiased estimators of the means.
+As well as computing the BLUP, using :meth:`xtest`, we may compute the
+best linear unbiased estimators of the mean.
 
 .. sourcecode:: python
 
-   >>> ttrain = np.linspace(0., 1.)
+   >>> ttest = np.linspace(0., 1.)
    >>> blup.Beta@[fun(ttrain) for fun in basis]
    array([ 4.41578258, 0.73007516, ... , 12.72544472])
-
-To construct the basis from scratch we would instead define three
-separate functions.
-
-.. sourcecode:: python
-
-   >>> def fun_1(t):
-   ...     return np.ones(len(t))
-   ...
-   >>> def fun_2(t):
-   ...     return t
-   ...
-   >>> def fun_3(t):
-   ...     return t**2.
-   ...
-   >>> basis = (fun_1, fun_2, fun_3)
-
-If we pass these functions :math:`n` arguments they return Numpy
-arrays of shape ``(n,)`` as required.
-
-.. sourcecode:: python
-
-   >>> t = np.random.rand(4)
-   >>> fun_1(t)
-   array([1., 1., 1., 1.])
-
-Check this as follows.
-
-.. sourcecode:: python
-		
-   >>> t.shape
-   (4,)
-   >>> fun_1(t).shape
-   (4,)
-   
 
 References
 ##########

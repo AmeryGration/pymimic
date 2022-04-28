@@ -33,13 +33,6 @@ residual is
 The behaviour of the observed predictor residuals should be consistent
 with the assumptions we have made about their distribution.
 
-
-If the distribution of the LOO predictor residuals is known then we
-may construct prediction intervals for them. If not, we may construct
-bounds for their prediction intervals using Chebyshev's inequality or
-the Vysochanskij--Petunin inequality (see :ref:`Prediction intervals
-<prediction_intervals>`).
-
 A good summary statistic is provided by the leave-one-out
 cross-validation score
 
@@ -130,8 +123,6 @@ The result is show in :numref:`branin_blp`.
 
 The standardized LOO residuals are small and randomly
 distributed. When plotted against their true values, the predictions
-lie around the diagonal. The root LOOCV score :math:`\sqrt{R^{2}} =
-22.4`, which is small compared to the mean sample value of
-:math:`54.3`. So we say, in this case, that the predictor has passed
-validation, and that we may trust the fitted curve and its associated
-prediction interval.
+lie around the diagonal. So we say, in this case, that the predictor
+has passed validation, and that we may trust the fitted curve and its
+associated prediction interval.

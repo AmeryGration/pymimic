@@ -18,9 +18,9 @@ we take to be a noisy sample of the Forrester function, :math:`f: [0,
 
 .. math::
 
-   f(t) = (6t - 2)^{2}\sin(12t - 4),
+   x(t) = (6t - 2)^{2}\sin(12t - 4),
 
-namely :math:`(t_{i}, f(t_{i}) + \epsilon_{i})_{i = 1}^{n}`, where
+namely :math:`(t_{i}, x(t_{i}) + \epsilon_{i})_{i = 1}^{n}`, where
 :math:`\epsilon_{i}` is the error associated with the :math:`i`-th
 element of the sample. We may fit a curve to this data using either
 the best linear predictor (BLP) or the best linear unbiased predictor
@@ -79,7 +79,7 @@ attribute :attr:`args`.
    >>> blup.args
    (80.74538835868711, 31.626405926933707)
 
-Now predict the value of the Forrester function, :math:`f(t_{*})`, for
+Now predict the value of the Forrester function, :math:`x(t_{*})`, for
 some random element of the domain, :math:`t_{*}`. This is done by the
 class method :meth:`xtest()`, which returns both the prediction and
 the mean-squared error of that prediction.
@@ -88,9 +88,9 @@ the mean-squared error of that prediction.
 
    >>> t = np.random.rand()
    >>> blup.xtest(t)
-   (array([-5.14655856]), array([0.36967169]))
+   (array(-5.14655856), array(0.36967169))
 
-We may compare the prediction with :math:`f(t_{*})`.
+We may compare the prediction with :math:`x(t_{*})`.
 
 .. sourcecode:: python
 
@@ -116,9 +116,9 @@ prediction intervals.
 
    >>> import matplotlib.pyplot as plt
    >>> plt.plot(t, x)
-   >>> plt.fill_between(t, x - 3.*np.sqrt(mse), x + 3.*np.sqrt(mse), color="silver")
+   >>> plt.fill_between(t, x - 3.*np.sqrt(mse), x + 3.*np.sqrt(mse))
    >>> x_forrester = mim.testfunc.forrester(t)
-   >>> plt.plot(t, x_forrester, color="k", ls="dashed")
+   >>> plt.plot(t, x_forrester)
    >>> plt.scatter(ttrain, xtrain)
 
 ..
@@ -134,7 +134,7 @@ We get the plot shown in :numref:`forrester_blup`.
 
 .. _forrester_blup:
 .. figure:: forrester_blup.jpg
-   :figwidth: 75%
+   :figwidth: 50%
    :align: center
 
    The Forrester function (dashed line), a noisy sample of the
@@ -157,7 +157,7 @@ their variance may be obtained as follows.
 	    1.73091835,  1.73096003,  1.92073694,  3.0432301 , 13.04227266]))
 
 We may plot these as follows to give us :numref:`forrester_diagnostic`.
-
+g
 .. sourcecode:: python
 
    >>> mim.plot.diagnostic(xtrain, *blup.loocv)

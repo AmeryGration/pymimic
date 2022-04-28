@@ -18,7 +18,7 @@ covariance kernel if and only if it is positive semidefinite, i.e. if
 
 .. math::
 
-   \sum_{i, j}f(t_{i}, t_{j})u_{i}u_{j} > 0
+   \sum_{i, j}f(t_{i}, t_{j})u_{i}u_{j} \ge 0
 
 for all :math:`t_{i}, t_{j} \in T` and all :math:`u_{i}, u_{j} \in
 \mathbf{R}`.
@@ -65,7 +65,7 @@ defining the function :func:`kernel`, we might instead have used
 .. sourcecode:: python
    
    >>> import pymimic as mim
-   >>> mim.Blup(ttrain, xtrain, mim.kernel.squared_exponential, (16000., 0.08, 0.009))
+   >>> mim.Blup(ttrain, xtrain, 10.**2., mim.kernel.squared_exponential, (16000., 0.08, 0.009))
 
 By default ``covfunc`` is set to :func:`kernel.squared_exponential`.
 
