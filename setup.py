@@ -16,7 +16,7 @@ setuptools.setup(
     url="https://github.com/AmeryGration/pymimic",
     package_data={"pymimic": ["design_data/*.dat"]},
     packages=setuptools.find_packages(),
-    python_requires=">3.6.9",
+    python_requires=">=3.6.9",
     install_requires=["numpy", "scipy", "matplotlib"],
     classifiers=(
         "Programming Language :: Python :: 3",
