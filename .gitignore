@@ -1,5 +1,5 @@
 **/*~
-**/__pycache__
+__pycache__
 example/
 tests/
 build/
@@ -7,5 +7,4 @@ dist/
 pymimic.egg-info/
 dev/
 setup.cfg
-setup.cfg~
 .gitignore
