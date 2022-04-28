@@ -7,4 +7,5 @@ dist/
 pymimic.egg-info/
 dev/
 setup.cfg
+setup.cfg~
 .gitignore
