@@ -58,8 +58,8 @@ required to fully specify ``covfunc``, may be passed to :class:`Blp`
 or :class:`Blup` as a tuple, using the keyword argument ``args``.
 
 
-Built-in positive-semidefinite kernels
---------------------------------------
+Built-in positive-definite kernels
+----------------------------------
 
 The module :mod:`kernel` provides a suite of positive-definite
 kernels, which may be used as second-moment or covariance kernels. The
@@ -85,10 +85,10 @@ User-defined positive-definite kernels
 
 Because Numpy and Scipy functions are vectorized they naturally have
 the required signature. It is therefore convenient to construct
-positive-semidefinite kernels using Numpy and Scipy.
+positive-definite kernels using Numpy and Scipy.
 
 Consider the case of two-dimensional index set :math:`T = \mathbf{R}
-\times \mathbf{R}`, and the positive-semidefinite kernel :math:`k: T
+\times \mathbf{R}`, and the positive-definite kernel :math:`k: T
 \times T \longrightarrow \mathbf{R}` given by
 
 .. math::
