@@ -157,7 +157,7 @@ their variance may be obtained as follows.
 	    1.73091835,  1.73096003,  1.92073694,  3.0432301 , 13.04227266]))
 
 We may plot these as follows to give us :numref:`forrester_diagnostic`.
-g
+
 .. sourcecode:: python
 
    >>> mim.plot.diagnostic(xtrain, *blup.loocv)

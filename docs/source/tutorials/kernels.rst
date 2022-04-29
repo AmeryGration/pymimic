@@ -29,6 +29,17 @@ both positive-semidefinite kernels and :math:`a` and :math:`b` are
 real numbers then :math:`afg`, and :math:`af + bg` are also
 positive-semidefinite kernels.
 
+To compute the BLP or BLUP we must invert the covariance matrix
+:math:`K`. We therefore require the second-moment of covariance kernel
+to be positive-definite, i.e. we require that
+
+.. math::
+
+   \sum_{i, j}f(t_{i}, t_{j})u_{i}u_{j} > 0
+
+since a positive-semidefinite matrix is positive-definite if and only
+if it is invertible.
+
 
 .. _pymimic_secondmoment_and_covariance_kernels:
 
@@ -47,8 +58,8 @@ required to fully specify ``covfunc``, may be passed to :class:`Blp`
 or :class:`Blup` as a tuple, using the keyword argument ``args``.
 
 
-Built-in positive-definite kernels
-----------------------------------
+Built-in positive-semidefinite kernels
+--------------------------------------
 
 The module :mod:`kernel` provides a suite of positive-definite
 kernels, which may be used as second-moment or covariance kernels. The
