@@ -1,5 +1,4 @@
 .gitignore
-.readthedocs.yaml
 **/*~
 **/__pycache__
 example/
