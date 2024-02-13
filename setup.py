@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
     
 setuptools.setup(
     name="pymimic",
-    version="0.1.1",
+    version="1.0.1",
     author="Amery Gration",
     author_email="amerygration@hotmail.com",
     description="A pure-Python implementation of linear prediction",
