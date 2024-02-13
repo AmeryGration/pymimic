@@ -46,13 +46,17 @@ def _opt(linear_predictor, opt_method="mle", n_start=None,
 
         def _obj_R2(self, x):
             r"""Return sum of squares of LOO residuals for given covfunc arg"""
-            linear_predictor.args = tuple([theta[i](x[i]) for i in range(len(x))])
+            linear_predictor.args = tuple(
+                [theta[i](x[i]) for i in range(len(x))]
+            )
             return linear_predictor.R2
 
         def _obj_lnL(self, x):
             r"""Return negative of log-likelihood of covfunc arg"""
             # TO DO Be able to pass arbitrary probability distribution
-            linear_predictor.args = tuple([theta[i](x[i]) for i in range(len(x))])
+            linear_predictor.args = tuple(
+                [theta[i](x[i]) for i in range(len(x))]
+            )
             return - linear_predictor.lnL
 
     class _Param:

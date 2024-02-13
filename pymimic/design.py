@@ -148,8 +148,10 @@ def design(bounds, method="lhs", n=None):
         if n == None:
             n = 10*dim
         try:
-            file = os.path.join(os.path.dirname(__file__),
-                                "design_data/lhs_design_{}_{}.dat".format(dim, n))
+            file = os.path.join(
+                os.path.dirname(__file__),
+                "design_data/lhs_design_{}_{}.dat".format(dim, n)
+            )
             design = np.loadtxt(file)
             design = np.loadtxt(file)
             design = transform_design(design)
@@ -162,8 +164,10 @@ def design(bounds, method="lhs", n=None):
         if n == None:
             n = 10*dim
         try:
-            file = os.path.join(os.path.dirname(__file__),
-                                "design_data/lhs_design_{}_{}.dat".format(dim, n))
+            file = os.path.join(
+                os.path.dirname(__file__),
+                "design_data/lhs_design_{}_{}.dat".format(dim, n)
+            )
             design = np.loadtxt(file)
             design = transform_design(design)
             design = 0.5*(1. - np.cos(np.pi*design))
@@ -180,7 +184,7 @@ def design(bounds, method="lhs", n=None):
         if n == None:
             n = 10
         x_dim = [np.linspace(0, 1, n) for i in range(dim)]
-        design = np.vstack(map(np.ravel, np.meshgrid(*x_dim))).T
+        design = np.vstack(list(map(np.ravel, np.meshgrid(*x_dim)))).T
     else:
         raise ValueError("method not recognized.")
     design = design*(bounds.T[1] - bounds.T[0]) + bounds.T[0]

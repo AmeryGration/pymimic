@@ -280,19 +280,22 @@ variance). But note that heteroskedastic errors may also be used.
 Curve fitting using the BLP
 ***************************
 
-We begin by defining the second-moment kernel we are to use. We will
-use a squared-exponential covariance kernel. (See :ref:`Covariance and
-second-moment kernels <kernels>` for details on specifying
-positive-definite kernels for use with PyMimic.)
+Let us predict values of the Branin function using the BLP. We will use a squared-exponential covariance kernel, which is included in the module :mod:`kernel`. (See :ref:`Covariance and second-moment kernels <kernels>` for details on specifying positive-definite kernels for use with PyMimic.) First create an instance of the class :class:`Blp`, specifying the covariance kernel using the keyword `kernel`, and then optimizing its parameters.
 
 .. sourcecode:: python
 
-   >>> import numpy as np
-   >>> from scipy.spatial.distance import cdist
-   >>> def kernel(s, t):
-	   sigma2 = 16000.
-	   M = np.diag([0.08, 0.009])
-           return sigma2*np.exp(-0.5*cdist(s, t, "mahalanobis", VI=M)**2.)
+   >>> blp = mim.Blp(ttrain, xtrain, 10.**2., covfunc=mim.kernel.squared_exponential)
+   >>> blp.opt()
+      message: Optimization terminated successfully.
+   success: True
+    status: 0
+       fun: 157.22085324793372
+	 x: [ 1.571e+00  1.751e-02  5.377e-03]
+       nit: 5
+     direc: [[ 0.000e+00  0.000e+00  1.000e+00]
+	     [ 0.000e+00  1.000e+00  0.000e+00]
+	     [ 3.242e-05 -6.780e-03 -3.954e-03]]
+      nfev: 255
 
 Now generate the values of :math:`t` for which we wish to predict the
 Branin function.
@@ -301,13 +304,10 @@ Branin function.
 
    >>> t = mim.design(bounds, "regular", 50)
 
-Now compute the predictions and their mean-squared errors by creating
-an instance of the class :class:`Blp` and then then calling its
-method :meth:`xtest`.
+And compute the predictions and their mean-squared errors by calling the method :meth:`xtest`.
 
 .. sourcecode:: python
-
-   >>> blp = mim.Blp(ttrain, xtrain, 10.**2., kernel)
+		
    >>> x, mse = blp.xtest(t)
    >>> x
    [239.14432682 221.71949142 202.8843214  ... 105.88388496  93.78647069
@@ -331,13 +331,10 @@ Now plot the predictions.
 .. sourcecode:: python
 
    >>> import matplotlib.pyplot as plt
-   >>> im = plt.imshow(x.reshape(50, 50), extent=[-5., 10., 0., 15.],
-                       origin="lower", vmin=-25., vmax=250.)
-   >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x.reshape(50, 50),
-		   levels=np.linspace(-25., 250., 12))
+   >>> im = plt.imshow(x.reshape(50, 50), extent=[-5., 10., 0., 15.], origin="lower", vmin=-25., vmax=250.)
+   >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x.reshape(50, 50), levels=np.linspace(-25., 250., 12))
    >>> x_branin = mim.testfunc.branin(*t.T)
-   >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x_branin.reshape(50, 50),
-		   linestyles="dashed", levels=np.linspace(-25., 250., 12))
+   >>> plt.contour(np.linspace(-5., 10.), np.linspace(0., 15.), x_branin.reshape(50, 50), linestyles="dashed", levels=np.linspace(-25., 250., 12))
    >>> plt.scatter(ttrain.T[0], ttrain.T[1])
    >>> plt.colorbar(im)
    >>> plt.show()
@@ -386,18 +383,34 @@ Curve fitting using the BLUP
 
 Curve fitting with the BLUP differs from curve fitting with the BLP
 only insofar as we must also specify a basis for the space of
-mean-value functions. (See :ref:`Bases for the space of mean-value
-functions <basis>` for details on specifying basis functions for use
-with PyMimic.) Let us assume that the mean is constant.
+mean-value functions. We will use a basis consisting of the constantly
+one function, which is included in the module :mod:`basis`. (See
+:ref:`Bases for the space of mean-value functions <basis>` for details
+on specifying basis functions for use with PyMimic.) First create an
+instance of the class :class:`Blup`, specifying the basis using the
+keyword `basis`. Again, we must optimize the parameters of the
+covariance kernel.
+
+..
+   .. sourcecode:: python
+
+      def const(t)
+	  return np.ones(len(t))
 
 .. sourcecode:: python
 
-   def const(t)
-       return np.ones(len(t))
-
-.. sourcecode:: python
-
-   >>> blup = mim.Blup(ttrain, xtrain, 10.**2., kernel, basis=(const,))
+   >>> blup = mim.Blup(ttrain, xtrain, 10.**2., covfunc=mim.kernel.squared_exponential, basis=mim.basis.const())
+   >>> blup.opt()
+   message: Optimization terminated successfully.
+   success: True
+    status: 0
+       fun: 155.50248314797585
+	 x: [ 1.571e+00  2.250e-02  8.333e-03]
+       nit: 5
+     direc: [[ 1.238e-04 -1.030e-02 -5.152e-03]
+	     [ 0.000e+00  1.000e+00  0.000e+00]
+	     [ 2.212e-06 -3.640e-04 -2.789e-04]]
+      nfev: 231
 
 Now proceed as for the case of the BLP.
 
